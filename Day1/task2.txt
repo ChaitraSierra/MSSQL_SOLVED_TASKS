@@ -1,11 +1,9 @@
 
 SELECT
-    c1.CustomerId AS CustomerA_ID,
-    c1.Name AS CustomerA_Name,
-    c2.CustomerId AS CustomerB_ID,
-    c2.Name AS CustomerB_Name,
-    c1.Region
-FROM Customers c1
-JOIN Customers c2
-    ON c1.Region = c2.Region
-   AND c1.CustomerId < c2.CustomerId;
+    CustomerId,
+    AVG(EnergyConsumed) AS AvgEnergyConsumed,
+    MAX(EnergyConsumed) AS MaxEnergyConsumed
+FROM SmartMeterReadings
+WHERE YEAR(ReadingDateTime) = YEAR(GETDATE())
+GROUP BY CustomerId;
+
