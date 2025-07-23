@@ -1,1 +1,7 @@
+SELECT r.ReadingId, r.MeterId, r.ReadingDateTime, r.EnergyConsumed
+FROM SmartMeterReadings r
+JOIN Meters m ON r.MeterId = m.MeterId
+WHERE r.EnergyConsumed BETWEEN 10 AND 50
+  AND r.ReadingDateTime BETWEEN '2024-01-01' AND '2024-12-31'
+  AND m.InstalledDate <= '2024-06-30';
 
