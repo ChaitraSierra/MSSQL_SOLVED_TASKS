@@ -1,1 +1,31 @@
 
+CREATE PROCEDURE InsertSmartMeterReading
+    @MeterId INT,
+    @CustomerId INT,
+    @ReadingDateTime DATETIME,
+    @EnergyConsumed FLOAT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        -- Try to insert the reading
+        INSERT INTO SmartMeterReadings (MeterId, CustomerId, ReadingDateTime, EnergyConsumed)
+        VALUES (@MeterId, @CustomerId, @ReadingDateTime, @EnergyConsumed);
+
+        -- On success, return message
+        SELECT 'Reading inserted.' AS Message;
+    END TRY
+    BEGIN CATCH
+        -- Check for duplicate key error (error number 2627)
+        IF ERROR_NUMBER() = 2627
+        BEGIN
+            SELECT 'Error inserting reading: duplicate entry.' AS ErrorMessage;
+        END
+        ELSE
+        BEGIN
+            -- Generic error message for other errors
+            SELECT 'Error inserting reading: ' + ERROR_MESSAGE() AS ErrorMessage;
+        END
+    END CATCH
+END;
