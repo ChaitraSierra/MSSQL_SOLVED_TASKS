@@ -1,1 +1,12 @@
+SELECT 
+    SM.CustomerId,
+    C.Name,
+    SM.MeterId,
+    SM.ReadingDateTime,
+    SM.EnergyConsumed
+FROM SmartMeterReadings SM
+INNER JOIN Customers C 
+    ON SM.CustomerId = C.CustomerId
+WHERE SM.EnergyConsumed > 30
+  AND SM.ReadingDateTime >= DATEADD(DAY, -30, GETDATE());
 
