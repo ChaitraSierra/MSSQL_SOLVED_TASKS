@@ -1,1 +1,17 @@
 
+CREATE VIEW LatestMeterReadings AS
+SELECT MeterId, ReadingDateTime, EnergyConsumed
+FROM (
+    SELECT 
+        MeterId,
+        ReadingDateTime,
+        EnergyConsumed,
+        ROW_NUMBER() OVER (PARTITION BY MeterId ORDER BY ReadingDateTime DESC) AS rn
+    FROM SmartMeterReadings
+) AS sub
+WHERE rn = 1;
+
+
+
+-------------To Query that View--------------------
+SELECT * FROM LatestMeterReadings;
