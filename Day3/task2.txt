@@ -3,8 +3,8 @@ WITH MeterConsumption AS (
     SELECT 
         CustomerId,
         MeterId,
-        SUM(EnergyConsumed) AS TotalEnergy,
-        COUNT(*) AS ReadingCount
+        SUM(EnergyConsumed) AS TotalEnergyConsumed,
+        COUNT(*) AS Rank
     FROM SmartMeterReadings
     GROUP BY CustomerId, MeterId
     HAVING COUNT(*) > 0 -- Optional: Ensures only meters with readings are included
@@ -12,7 +12,7 @@ WITH MeterConsumption AS (
 SELECT 
     CustomerId,
     MeterId,
-    TotalEnergy,
+    TotalEnergyConsumed,
     ReadingCount,
     RANK() OVER (PARTITION BY CustomerId ORDER BY TotalEnergy DESC) AS MeterRank
 FROM MeterConsumption;
