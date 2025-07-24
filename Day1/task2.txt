@@ -1,9 +1,20 @@
-
-SELECT
+SELECT 
     CustomerId,
     AVG(EnergyConsumed) AS AvgEnergyConsumed,
     MAX(EnergyConsumed) AS MaxEnergyConsumed
 FROM SmartMeterReadings
-WHERE YEAR(ReadingDateTime) = YEAR(GETDATE())
+WHERE YEAR(ReadingDateTime) = YEAR(CURRENT_DATE)
+GROUP BY CustomerId;
+
+
+
+or
+
+SELECT 
+    CustomerId,
+    AVG(EnergyConsumed) AS AvgEnergyConsumed,
+    MAX(EnergyConsumed) AS MaxEnergyConsumed
+FROM SmartMeterReadings
+WHERE ReadingDateTime BETWEEN '2025-01-01' AND '2025-12-31'
 GROUP BY CustomerId;
 
