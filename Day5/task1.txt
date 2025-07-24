@@ -1,1 +1,39 @@
 
+--------Create ArchivedCustomers Table--------
+
+CREATE TABLE ArchivedCustomers (
+    CustomerId INT PRIMARY KEY,
+    Name NVARCHAR(100),
+    Address NVARCHAR(255),
+    Region NVARCHAR(50)
+);
+
+---------Create the AFTER DELETE Trigger with Transaction Handling-------
+
+CREATE TRIGGER trg_AfterDeleteCustomer
+ON Customers
+AFTER DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+      ------- Insert deleted customer details into ArchivedCustomers-------
+        INSERT INTO ArchivedCustomers (CustomerId, Name, Address, Region)
+        SELECT CustomerId, Name, Address, Region
+        FROM DELETED;
+
+        COMMIT TRANSACTION;
+
+        ------- Optional: Return archived rows for confirmation (as a view-like output)------
+        SELECT CustomerId, Name, Address, Region
+        FROM ArchivedCustomers
+        WHERE CustomerId IN (SELECT CustomerId FROM DELETED);
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW; -- Raise the error
+    END CATCH
+END;
