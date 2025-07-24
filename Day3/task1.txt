@@ -1,1 +1,8 @@
+SELECT 
+    C.Region,
+    COUNT(DISTINCT SM.MeterId) AS MeterCount
+FROM SmartMeterReadings SM
+INNER JOIN Customers C ON SM.CustomerId = C.CustomerId
+GROUP BY C.Region
+HAVING COUNT(DISTINCT SM.MeterId) > 3;
 
