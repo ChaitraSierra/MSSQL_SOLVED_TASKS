@@ -1,1 +1,12 @@
 
+SELECT 
+    MeterId,
+    ReadingDateTime,
+    EnergyConsumed,
+    SUM(EnergyConsumed) OVER (
+        PARTITION BY MeterId
+        ORDER BY ReadingDateTime
+        ROWS UNBOUNDED PRECEDING
+    ) AS RunningTotal
+FROM SmartMeterReadings
+ORDER BY MeterId, ReadingDateTime;
