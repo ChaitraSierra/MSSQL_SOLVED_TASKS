@@ -1,1 +1,21 @@
+CREATE PROCEDURE GetReadingsByCustomer
+    @CustomerId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        SELECT 
+            MeterId,
+            ReadingDateTime,
+            EnergyConsumed
+        FROM SmartMeterReadings
+        WHERE CustomerId = @CustomerId
+        ORDER BY ReadingDateTime;
+    END TRY
+    BEGIN CATCH
+        DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
+        RAISERROR('Error fetching readings for CustomerId %d: %s', 16, 1, @CustomerId, @ErrorMessage);
+    END CATCH
+END;
 
